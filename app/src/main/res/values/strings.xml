@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Time2Work</string>
+    <string name="home_address">Home Address</string>
+    <string name="work_address">Work Address</string>
+    <string name="time_to_get_to_work">Time to arrive at work</string>
+    <string name="time_to_get_ready">Time to get ready</string>
+    <string name="save">Save</string>
 </resources>
