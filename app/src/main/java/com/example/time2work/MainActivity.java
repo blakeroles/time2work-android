@@ -7,6 +7,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
 public class MainActivity extends AppCompatActivity {
 
     // Declaring variables from the UI
@@ -23,15 +27,24 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // TODO: Check to see if saved file exists, if it does:
-            // TODO: allow the Edit button to be visible
-            // TODO: allow Save button to be visible
-            // TODO: populate the fields with the file contents
-            // TODO: allow the Calculate button to be visible
-        // TODO: If it doesn't exist:
-            // TODO: Allow the Save button to be visible,
-            // TODO: allow the Edit button to be visible
-            // TODO: dont allow the calculate button to be visible
+        // Map UI elements to variables.
+        calculateButton = findViewById(R.id.buttonCalculate);
+
+        homeAddress = findViewById(R.id.editTextHomeAddress);
+        workAddress = findViewById(R.id.editTextWorkAddress);
+        timeToArriveAtWork = findViewById(R.id.editTextTimeToArriveWork);
+
+        // Check to see if saved file exists, if it does:
+        try {
+            FileInputStream appFile = openFileInput("time2work.csv");
+
+            // TODO: Fill EditText fields with data from file.
+            calculateButton.setEnabled(true);
+
+        } catch (FileNotFoundException e) {
+            // If file does not exist
+            e.printStackTrace();
+        }
 
     }
 
@@ -40,19 +53,35 @@ public class MainActivity extends AppCompatActivity {
         // Switch statement to determine what has been clicked
         switch ((view).getId())
         {
-            case R.id.button:
-                // Create a new model object
-                Model newModel = new Model(workAddress.toString(), homeAddress.toString(), Integer.parseInt(timeToArriveAtWork.toString()));
+            case R.id.buttonSave:
+                // Lock all the fields to not be editable
+                disableEditText(homeAddress);
+                disableEditText(workAddress);
+                disableEditText(timeToArriveAtWork);
 
-                // TODO: Lock all the fields to not be editable
+                System.out.println(homeAddress.isEnabled());
+
+                break;
+
+                // Create a new model object
+                // Model newModel = new Model(workAddress.toString(), homeAddress.toString(), Integer.parseInt(timeToArriveAtWork.toString()));
+
+
                 // TODO: Call saveFile function
                 // TODO: Populate the text fields with the saved information
                 // TODO: Allow the Edit button to be visible and save button to be invisible
 
             // TODO: Implement if Edit button is pressed
+            case R.id.buttonEdit:
+                // Unlock all the fields to be editable
+                enableEditText(homeAddress);
+                enableEditText(workAddress);
+                enableEditText(timeToArriveAtWork);
+                System.out.println(homeAddress.isEnabled());
+                break;
 
-                // TODO: Unlock all the fields to be editable
-
+            case R.id.buttonCalculate:
+                break;
             // TODO: Implement if Calculate button is pressed
 
                 // TODO: Call the callGoogleApi function
@@ -87,6 +116,18 @@ public class MainActivity extends AppCompatActivity {
         // TODO: Return the time to get ready
 
         return "";
+    }
+
+    private void disableEditText(EditText editText) {
+        editText.setFocusableInTouchMode(false);
+        editText.setEnabled(false);
+        editText.setCursorVisible(false);
+    }
+
+    private void enableEditText(EditText editText) {
+        editText.setFocusableInTouchMode(true);
+        editText.setEnabled(true);
+        editText.setCursorVisible(true);
     }
 
 }

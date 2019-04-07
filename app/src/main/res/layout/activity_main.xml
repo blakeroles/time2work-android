@@ -16,6 +16,7 @@
         android:layout_marginEnd="124dp"
         android:layout_marginRight="124dp"
         android:ems="10"
+        android:enabled="false"
         android:hint="@string/home_address"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
@@ -32,6 +33,7 @@
         android:layout_marginEnd="125dp"
         android:layout_marginRight="125dp"
         android:ems="10"
+        android:enabled="false"
         android:hint="@string/work_address"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
@@ -48,6 +50,7 @@
         android:layout_marginEnd="126dp"
         android:layout_marginRight="126dp"
         android:ems="10"
+        android:enabled="false"
         android:hint="@string/time_to_get_to_work"
         android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
@@ -55,35 +58,37 @@
         app:layout_constraintTop_toBottomOf="@+id/editTextWorkAddress" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/buttonSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="38dp"
-        android:layout_marginLeft="38dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
         android:layout_marginTop="40dp"
-        android:layout_marginEnd="125dp"
-        android:layout_marginRight="125dp"
+        android:layout_marginEnd="127dp"
+        android:layout_marginRight="127dp"
+        android:onClick="onClick"
         android:text="@string/save"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/button2"
+        app:layout_constraintStart_toEndOf="@+id/buttonEdit"
         app:layout_constraintTop_toBottomOf="@+id/editTextTimeToArriveWork" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/buttonEdit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="72dp"
         android:layout_marginLeft="72dp"
         android:layout_marginTop="40dp"
-        android:layout_marginEnd="38dp"
-        android:layout_marginRight="38dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:onClick="onClick"
         android:text="@string/edit"
-        app:layout_constraintEnd_toStartOf="@+id/button"
+        app:layout_constraintEnd_toStartOf="@+id/buttonSave"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextTimeToArriveWork" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/buttonCalculate"
         android:layout_width="212dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="72dp"
@@ -91,10 +96,12 @@
         android:layout_marginTop="30dp"
         android:layout_marginEnd="127dp"
         android:layout_marginRight="127dp"
+        android:enabled="false"
+        android:onClick="onClick"
         android:text="@string/calculate"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonSave" />
 
     <TextView
         android:id="@+id/textViewTimeToGetReady"
@@ -107,6 +114,6 @@
         android:layout_marginRight="129dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button3" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonCalculate" />
 
 </android.support.constraint.ConstraintLayout>
