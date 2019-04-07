@@ -5,4 +5,6 @@
     <string name="time_to_get_to_work">Time to arrive at work</string>
     <string name="time_to_get_ready">Time to get ready</string>
     <string name="save">Save</string>
+    <string name="edit">Edit</string>
+    <string name="calculate">Calculate</string>
 </resources>

@@ -8,12 +8,12 @@ public class Model {
     private int timeToArriveAtWork;
     private int timeToGetReady;
 
-    public Model(String workAddress, String homeAddress, int timeToArriveAtWork, int timeToGetReady)
+    public Model(String workAddress, String homeAddress, int timeToArriveAtWork)
     {
         this.workAddress = workAddress;
         this.homeAddress = homeAddress;
         this.timeToArriveAtWork = timeToArriveAtWork;
-        this.timeToGetReady = timeToGetReady;
+        this.timeToGetReady = -1;
     }
 
     public String getWorkAddress() {
