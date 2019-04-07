@@ -12,8 +12,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.io.StringWriter;
 import org.apache.commons.io.IOUtils;
 
@@ -38,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Map UI elements to variables.
         calculateButton = findViewById(R.id.buttonCalculate);
-
         homeAddress = findViewById(R.id.editTextHomeAddress);
         workAddress = findViewById(R.id.editTextWorkAddress);
         timeToArriveAtWork = findViewById(R.id.editTextTimeToArriveWork);
@@ -47,22 +44,20 @@ public class MainActivity extends AppCompatActivity {
         try {
             FileInputStream appFileStream = openFileInput(FILE_NAME);
 
-            // TODO: Fill EditText fields with data from file.
+            // Fill EditText fields with data from file.
             calculateButton.setEnabled(true);
             String stringFromFileStream = getFileContent(appFileStream);
             if (stringFromFileStream.matches(""))
             {
-                // TODO: Error Occured!
+                // TODO: Error Occurred!
             } else
             {
                 // Split the string and populate the fields appropriately
-                System.out.println("I read this text: " + stringFromFileStream);
                 String[] stringFromFileArr = stringFromFileStream.split(",");
                 homeAddress.setText(stringFromFileArr[0]);
                 workAddress.setText(stringFromFileArr[1]);
                 timeToArriveAtWork.setText(stringFromFileArr[2]);
             }
-
 
         } catch (FileNotFoundException e) {
             // If file does not exist
@@ -97,8 +92,6 @@ public class MainActivity extends AppCompatActivity {
                 Boolean result = saveFile(newModel);
 
                 // TODO: Depending on result: set an alert saying if it was successful or not
-
-
                 // TODO: Populate the text fields with the saved information
 
                 break;
@@ -113,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.buttonCalculate:
                 break;
-            // TODO: Implement if Calculate button is pressed
 
                 // TODO: Call the callGoogleApi function
                 // TODO: Call the calculateTimeToGetReady function
@@ -126,28 +118,15 @@ public class MainActivity extends AppCompatActivity {
     {
         // Check to see if saved file exists, if it does:
         try {
-            FileInputStream appFile = openFileInput(FILE_NAME);
             File appFileToDelete = new File(getFilesDir(), FILE_NAME);
             appFileToDelete.delete();
-            System.out.println("I deleted the file: " + FILE_NAME);
-
             writeToFile(m);
 
-
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             // If file does not exist
             writeToFile(m);
             e.printStackTrace();
         }
-
-
-
-
-        // TODO: Implement function to save the new Model to the file system
-        // TODO: Check if a saved file already exists
-        // TODO: If saved file already exists, prompt the user if they want to overwrite
-        // TODO:      Delete saved file
-        // Create and save new file with new Model information
 
         return true;
     }
@@ -162,8 +141,8 @@ public class MainActivity extends AppCompatActivity {
             System.out.println("File contents: " + fileContents.getBytes());
             outputStream.write(fileContents.getBytes("UTF-8"));
             outputStream.close();
-        } catch (Exception e1) {
-            e1.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
