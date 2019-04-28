@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo
             case R.id.buttonCalculate:
                 str_from = homeAddress.getText().toString();
                 str_to = workAddress.getText().toString();
-                String url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + str_from + "&destinations=" + str_to + "YOUR_API_KEY";
+                String url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + str_from + "&destinations=" + str_to + "&key=" + APIContract.DISTANCE_MATRIX_API_KEY;
                 new GeoTask(MainActivity.this).execute(url);
                 break;
 
