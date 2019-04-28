@@ -7,4 +7,5 @@
     <string name="save">Save</string>
     <string name="edit">Edit</string>
     <string name="calculate">Calculate</string>
+    <string name="time_picker_button_text">...</string>
 </resources>

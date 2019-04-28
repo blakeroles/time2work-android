@@ -5,10 +5,10 @@ public class Model {
 
     private String workAddress;
     private String homeAddress;
-    private int timeToArriveAtWork;
+    private String timeToArriveAtWork;
     private int timeToGetReady;
 
-    public Model(String workAddress, String homeAddress, int timeToArriveAtWork)
+    public Model(String workAddress, String homeAddress, String timeToArriveAtWork)
     {
         this.workAddress = workAddress;
         this.homeAddress = homeAddress;
@@ -32,11 +32,11 @@ public class Model {
         this.homeAddress = homeAddress;
     }
 
-    public int getTimeToArriveAtWork() {
+    public String getTimeToArriveAtWork() {
         return timeToArriveAtWork;
     }
 
-    public void setTimeToArriveAtWork(int timeToArriveAtWork) {
+    public void setTimeToArriveAtWork(String timeToArriveAtWork) {
         this.timeToArriveAtWork = timeToArriveAtWork;
     }
 

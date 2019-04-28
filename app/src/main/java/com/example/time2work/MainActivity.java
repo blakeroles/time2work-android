@@ -1,31 +1,24 @@
 package com.example.time2work;
 
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringWriter;
+import java.math.BigDecimal;
+
 import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+
 
 public class MainActivity extends AppCompatActivity implements GeoTask.Geo
 {
@@ -41,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo
 
     private Model newModel;
     private String str_from, str_to;
+    private TimePickerDialog timePickerDialog;
     public static final String FILE_NAME = "time2work.csv";
 
     @Override
@@ -100,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo
                 } else
                 {
                     // Create a model object
-                    newModel = new Model(workAddress.getText().toString(), homeAddress.getText().toString(), Integer.parseInt(timeToArriveAtWork.getText().toString()));
+                    newModel = new Model(workAddress.getText().toString(), homeAddress.getText().toString(), timeToArriveAtWork.getText().toString());
                     System.out.println("New Model object created with: Home Address = " + homeAddress.getText().toString() + ", Work Address = " + workAddress.getText().toString() + ", Time To Arrive At Work = " + timeToArriveAtWork.getText().toString());
                 }
 
@@ -130,6 +124,11 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo
                 // TODO: Call the callGoogleApi function
                 // TODO: Call the calculateTimeToGetReady function
                 // TODO: Update the textView with the calculated time to get ready
+
+            case R.id.editTextTimeToArriveWork:
+                showTimePickerDialog();
+
+
 
         }
     }
@@ -199,7 +198,39 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo
     @Override
     public void setDouble(String result) {
         int timeInSecs = Integer.parseInt(result);
-        timeToGetReady.setText(result);
+        Double timeInHours = timeInSecs / 3600.0;
+        int hours = (int) timeInSecs / 3600;
+        Double remainder1 = timeInHours - hours;
+        Double timeInMinutes = remainder1 * 60.0;
+        int minutes = (int) (remainder1 * 60.0);
+        Double remainder2 = timeInMinutes - minutes;
+        int seconds = (int) (remainder2 * 60.0);
+
+        String timeAtWork = timeToArriveAtWork.getText().toString();
+        String[] timeAtWorkArr = timeAtWork.split(":");
+
+        int secondToPrint = 60 - seconds;
+        int minuteToPrint = Integer.parseInt(timeAtWorkArr[1]) - 1;
+        int hoursToPrint = Integer.parseInt(timeAtWorkArr[0]);
+        if (minuteToPrint < minutes)
+        {
+            hoursToPrint -= 1;
+            minuteToPrint += 60;
+        }
+
+        minuteToPrint -= minutes;
+        if (hoursToPrint < hours)
+        {
+            hoursToPrint = 24 - hours + hoursToPrint;
+        } else
+        {
+            hoursToPrint -= hours;
+        }
+
+
+
+
+        timeToGetReady.setText(hours + ":" + minutes + ":" + seconds + "......." + hoursToPrint + ":" + minuteToPrint + ":" + secondToPrint);
         //String res[]=result.split(",");
         //Double min=Double.parseDouble(res[0])/60;
         //int dist=Integer.parseInt(res[1])/1000;
@@ -208,56 +239,32 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo
 
     }
 
- //   private double getDistanceInfo() {
-//        StringBuilder stringBuilder = new StringBuilder();
-//        Double dist = 0.0;
-        //try {
-//
-        //    //destinationAddress = destinationAddress.replaceAll(" ","%20");
-        //    String url = "http://maps.googleapis.com/maps/api/directions/json?origin=" + -33.73 + "," + 150.99 + "&destination=" + -33.72 + "," + 150.93 + "&mode=driving&sensor=false";
-        //    Log.i("string", url);
-        //    HttpPost httppost = new HttpPost(url);
-////
-        //    HttpClient client = new DefaultHttpClient();
-        //    HttpResponse response;
-        //    stringBuilder = new StringBuilder();
-////
-////
-        //    response = client.execute(httppost);
-        //    //HttpEntity entity = response.getEntity();
-        //    //InputStream stream = entity.getContent();
-        //    //int b;
-        //    //while ((b = stream.read()) != -1) {
-        //    //    stringBuilder.append((char) b);
-        //    //}
-        //} catch (ClientProtocolException e) {
-        //} catch (IOException e) {
-        //}
 
-        //JSONObject jsonObject = new JSONObject();
-        //try {
-//
-        //    jsonObject = new JSONObject(stringBuilder.toString());
-//
-        //    JSONArray array = jsonObject.getJSONArray("routes");
-//
-        //    JSONObject routes = array.getJSONObject(0);
-//
-        //    JSONArray legs = routes.getJSONArray("legs");
-//
-        //    JSONObject steps = legs.getJSONObject(0);
-//
-        //    JSONObject distance = steps.getJSONObject("distance");
-//
-        //    Log.i("Distance", distance.toString());
-        //    dist = Double.parseDouble(distance.getString("text").replaceAll("[^\\.0123456789]","") );
-//
-        //} catch (JSONException e) {
-        //    // TODO Auto-generated catch block
-        //    e.printStackTrace();
-        //}
+    public void showTimePickerDialog() {
+        timePickerDialog = new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                int hour_length = String.valueOf(hourOfDay).length();
+                int minute_length = String.valueOf(minute).length();
+                String time_string = "";
+                if (hour_length == 1)
+                {
+                    time_string += "0";
+                }
+                time_string += hourOfDay + ":";
 
-//        return dist;
-//    }
+                if (minute_length == 1)
+                {
+                    time_string += "0";
+                }
+                time_string += minute;
+                timeToArriveAtWork.setText(time_string);
+            }
+        }, 0, 0, true);
+        timePickerDialog.show();
+    }
+
 
 }
+
+
