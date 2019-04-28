@@ -15,7 +15,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.StringWriter;
-import java.math.BigDecimal;
 
 import org.apache.commons.io.IOUtils;
 
@@ -28,8 +27,6 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo
     private EditText workAddress;
     private EditText timeToArriveAtWork;
     private TextView timeToGetReady;
-    private Button saveButton;
-    private Button editButton;
     private Button calculateButton;
 
     private Model newModel;
@@ -88,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo
                 disableEditText(timeToArriveAtWork);
 
                 // Check that newModel is populated
+                // TODO: Also include a check that the time to arrive at work field is a number
                 if (workAddress.getText().toString().matches("") && homeAddress.getText().toString().matches("") && timeToArriveAtWork.getText().toString().matches(""))
                 {
                     // TODO: Add a toast/alert message to populate fields
@@ -121,10 +119,6 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo
                 new GeoTask(MainActivity.this).execute(url);
                 break;
 
-                // TODO: Call the callGoogleApi function
-                // TODO: Call the calculateTimeToGetReady function
-                // TODO: Update the textView with the calculated time to get ready
-
             case R.id.editTextTimeToArriveWork:
                 showTimePickerDialog();
 
@@ -152,6 +146,7 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo
 
     public void writeToFile(Model m)
     {
+        // TODO: What if there are commas in the text fields already? This means that this save will not work.. correct this here
         String fileContents = m.getHomeAddress() + "," + m.getWorkAddress() + "," + m.getTimeToArriveAtWork();
         FileOutputStream outputStream;
 
@@ -199,7 +194,7 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo
     public void setDouble(String result) {
         int timeInSecs = Integer.parseInt(result);
         Double timeInHours = timeInSecs / 3600.0;
-        int hours = (int) timeInSecs / 3600;
+        int hours = timeInSecs / 3600;
         Double remainder1 = timeInHours - hours;
         Double timeInMinutes = remainder1 * 60.0;
         int minutes = (int) (remainder1 * 60.0);
@@ -231,11 +226,6 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo
 
 
         timeToGetReady.setText(hours + ":" + minutes + ":" + seconds + "......." + hoursToPrint + ":" + minuteToPrint + ":" + secondToPrint);
-        //String res[]=result.split(",");
-        //Double min=Double.parseDouble(res[0])/60;
-        //int dist=Integer.parseInt(res[1])/1000;
-        //tv_result1.setText("Duration= " + (int) (min / 60) + " hr " + (int) (min % 60) + " mins");
-        //tv_result2.setText("Distance= " + dist + " kilometers");
 
     }
 
