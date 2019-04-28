@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo
         homeAddress = findViewById(R.id.editTextHomeAddress);
         workAddress = findViewById(R.id.editTextWorkAddress);
         timeToArriveAtWork = findViewById(R.id.editTextTimeToArriveWork);
+        timeToGetReady = findViewById(R.id.textViewTimeToGetReady);
 
         // Check to see if saved file exists, if it does:
         try {
@@ -165,21 +166,6 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo
         }
     }
 
-    public String callGoogleApi()
-    {
-        // TODO: Query the Google API to get the time between two addresses
-        // TODO: Return the time between two addresses
-
-        return "";
-    }
-
-    public String calculateTimeToGetReady()
-    {
-        // TODO: Take the time calculated between the two addresses and subtract it from the Time to get to work
-        // TODO: Return the time to get ready
-
-        return "";
-    }
 
     private void disableEditText(EditText editText) {
         editText.setFocusableInTouchMode(false);
@@ -209,8 +195,11 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo
         return "";
     }
 
+    // Purpose of this function is to take the result from the API and calculate the time to get ready and display on screen
     @Override
     public void setDouble(String result) {
+        int timeInSecs = Integer.parseInt(result);
+        timeToGetReady.setText(result);
         //String res[]=result.split(",");
         //Double min=Double.parseDouble(res[0])/60;
         //int dist=Integer.parseInt(res[1])/1000;

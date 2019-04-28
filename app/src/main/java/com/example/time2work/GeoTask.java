@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -80,8 +81,18 @@ public class GeoTask extends AsyncTask<String, Void, String>
                 Log.d("JSON",json);
 
                 JSONObject root = new JSONObject(json);
+                JSONArray array_rows = root.getJSONArray("rows");
+                Log.d("JSON", "array_rows:"+array_rows);
+                JSONObject object_rows = array_rows.getJSONObject(0);
+                Log.d("JSON", "object_rows:"+object_rows);
+                JSONArray array_elements = object_rows.getJSONArray("elements");
+                Log.d("JSON", "array_elements:"+array_elements);
+                JSONObject object_elements = array_elements.getJSONObject(0);
+                Log.d("JSON", "object_elements:"+object_elements);
+                JSONObject object_duration = object_elements.getJSONObject("duration");
+                Log.d("JSON", "object_duration:"+object_duration);
 
-                return "return statement";
+                return object_duration.getString("value");
             }
 
         } catch (MalformedURLException e) {
