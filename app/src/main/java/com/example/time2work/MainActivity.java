@@ -27,7 +27,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements GeoTask.Geo
+{
 
     // Declaring variables from the UI
     private EditText homeAddress;
@@ -39,10 +40,12 @@ public class MainActivity extends AppCompatActivity {
     private Button calculateButton;
 
     private Model newModel;
+    private String str_from, str_to;
     public static final String FILE_NAME = "time2work.csv";
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -117,7 +120,10 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case R.id.buttonCalculate:
-                getDistanceInfo();
+                str_from = homeAddress.getText().toString();
+                str_to = workAddress.getText().toString();
+                String url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + str_from + "&destinations=" + str_to + "YOUR_API_KEY";
+                new GeoTask(MainActivity.this).execute(url);
                 break;
 
                 // TODO: Call the callGoogleApi function
@@ -203,9 +209,19 @@ public class MainActivity extends AppCompatActivity {
         return "";
     }
 
-    private double getDistanceInfo() {
-        StringBuilder stringBuilder = new StringBuilder();
-        Double dist = 0.0;
+    @Override
+    public void setDouble(String result) {
+        //String res[]=result.split(",");
+        //Double min=Double.parseDouble(res[0])/60;
+        //int dist=Integer.parseInt(res[1])/1000;
+        //tv_result1.setText("Duration= " + (int) (min / 60) + " hr " + (int) (min % 60) + " mins");
+        //tv_result2.setText("Distance= " + dist + " kilometers");
+
+    }
+
+ //   private double getDistanceInfo() {
+//        StringBuilder stringBuilder = new StringBuilder();
+//        Double dist = 0.0;
         //try {
 //
         //    //destinationAddress = destinationAddress.replaceAll(" ","%20");
@@ -252,7 +268,7 @@ public class MainActivity extends AppCompatActivity {
         //    e.printStackTrace();
         //}
 
-        return dist;
-    }
+//        return dist;
+//    }
 
 }
