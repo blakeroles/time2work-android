@@ -1,5 +1,6 @@
 package com.example.time2work;
 
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,30 +8,35 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.StringWriter;
+
 import org.apache.commons.io.IOUtils;
 
-public class MainActivity extends AppCompatActivity {
+
+public class MainActivity extends AppCompatActivity implements GeoTask.Geo
+{
 
     // Declaring variables from the UI
     private EditText homeAddress;
     private EditText workAddress;
     private EditText timeToArriveAtWork;
     private TextView timeToGetReady;
-    private Button saveButton;
-    private Button editButton;
     private Button calculateButton;
 
     private Model newModel;
+    private String str_from, str_to;
+    private TimePickerDialog timePickerDialog;
     public static final String FILE_NAME = "time2work.csv";
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -39,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         homeAddress = findViewById(R.id.editTextHomeAddress);
         workAddress = findViewById(R.id.editTextWorkAddress);
         timeToArriveAtWork = findViewById(R.id.editTextTimeToArriveWork);
+        timeToGetReady = findViewById(R.id.textViewTimeToGetReady);
 
         // Check to see if saved file exists, if it does:
         try {
@@ -78,13 +85,14 @@ public class MainActivity extends AppCompatActivity {
                 disableEditText(timeToArriveAtWork);
 
                 // Check that newModel is populated
+                // TODO: Also include a check that the time to arrive at work field is a number
                 if (workAddress.getText().toString().matches("") && homeAddress.getText().toString().matches("") && timeToArriveAtWork.getText().toString().matches(""))
                 {
                     // TODO: Add a toast/alert message to populate fields
                 } else
                 {
                     // Create a model object
-                    newModel = new Model(workAddress.getText().toString(), homeAddress.getText().toString(), Integer.parseInt(timeToArriveAtWork.getText().toString()));
+                    newModel = new Model(workAddress.getText().toString(), homeAddress.getText().toString(), timeToArriveAtWork.getText().toString());
                     System.out.println("New Model object created with: Home Address = " + homeAddress.getText().toString() + ", Work Address = " + workAddress.getText().toString() + ", Time To Arrive At Work = " + timeToArriveAtWork.getText().toString());
                 }
 
@@ -105,11 +113,16 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case R.id.buttonCalculate:
+                str_from = homeAddress.getText().toString();
+                str_to = workAddress.getText().toString();
+                String url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + str_from + "&destinations=" + str_to + "&key=" + APIContract.DISTANCE_MATRIX_API_KEY;
+                new GeoTask(MainActivity.this).execute(url);
                 break;
 
-                // TODO: Call the callGoogleApi function
-                // TODO: Call the calculateTimeToGetReady function
-                // TODO: Update the textView with the calculated time to get ready
+            case R.id.editTextTimeToArriveWork:
+                showTimePickerDialog();
+
+
 
         }
     }
@@ -133,6 +146,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void writeToFile(Model m)
     {
+        // TODO: What if there are commas in the text fields already? This means that this save will not work.. correct this here
         String fileContents = m.getHomeAddress() + "," + m.getWorkAddress() + "," + m.getTimeToArriveAtWork();
         FileOutputStream outputStream;
 
@@ -146,21 +160,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public String callGoogleApi()
-    {
-        // TODO: Query the Google API to get the time between two addresses
-        // TODO: Return the time between two addresses
-
-        return "";
-    }
-
-    public String calculateTimeToGetReady()
-    {
-        // TODO: Take the time calculated between the two addresses and subtract it from the Time to get to work
-        // TODO: Return the time to get ready
-
-        return "";
-    }
 
     private void disableEditText(EditText editText) {
         editText.setFocusableInTouchMode(false);
@@ -190,4 +189,72 @@ public class MainActivity extends AppCompatActivity {
         return "";
     }
 
+    // Purpose of this function is to take the result from the API and calculate the time to get ready and display on screen
+    @Override
+    public void setDouble(String result) {
+        int timeInSecs = Integer.parseInt(result);
+        Double timeInHours = timeInSecs / 3600.0;
+        int hours = timeInSecs / 3600;
+        Double remainder1 = timeInHours - hours;
+        Double timeInMinutes = remainder1 * 60.0;
+        int minutes = (int) (remainder1 * 60.0);
+        Double remainder2 = timeInMinutes - minutes;
+        int seconds = (int) (remainder2 * 60.0);
+
+        String timeAtWork = timeToArriveAtWork.getText().toString();
+        String[] timeAtWorkArr = timeAtWork.split(":");
+
+        int secondToPrint = 60 - seconds;
+        int minuteToPrint = Integer.parseInt(timeAtWorkArr[1]) - 1;
+        int hoursToPrint = Integer.parseInt(timeAtWorkArr[0]);
+        if (minuteToPrint < minutes)
+        {
+            hoursToPrint -= 1;
+            minuteToPrint += 60;
+        }
+
+        minuteToPrint -= minutes;
+        if (hoursToPrint < hours)
+        {
+            hoursToPrint = 24 - hours + hoursToPrint;
+        } else
+        {
+            hoursToPrint -= hours;
+        }
+
+
+
+
+        timeToGetReady.setText(hours + ":" + minutes + ":" + seconds + "......." + hoursToPrint + ":" + minuteToPrint + ":" + secondToPrint);
+
+    }
+
+
+    public void showTimePickerDialog() {
+        timePickerDialog = new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                int hour_length = String.valueOf(hourOfDay).length();
+                int minute_length = String.valueOf(minute).length();
+                String time_string = "";
+                if (hour_length == 1)
+                {
+                    time_string += "0";
+                }
+                time_string += hourOfDay + ":";
+
+                if (minute_length == 1)
+                {
+                    time_string += "0";
+                }
+                time_string += minute;
+                timeToArriveAtWork.setText(time_string);
+            }
+        }, 0, 0, true);
+        timePickerDialog.show();
+    }
+
+
 }
+
+
