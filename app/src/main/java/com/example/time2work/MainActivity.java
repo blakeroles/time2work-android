@@ -106,6 +106,9 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo
                 // Call saveFile function
                 Boolean result = saveFile(newModel);
 
+                // Enable the calculate button
+                calculateButton.setEnabled(true);
+
                 // TODO: Depending on result: set an alert saying if it was successful or not
                 // TODO: Populate the text fields with the saved information
 
