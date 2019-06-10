@@ -59,11 +59,18 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo
                 // TODO: Error Occurred!
             } else
             {
-                // Split the string and populate the fields appropriately
-                String[] stringFromFileArr = stringFromFileStream.split(",");
-                homeAddress.setText(stringFromFileArr[0]);
-                workAddress.setText(stringFromFileArr[1]);
-                timeToArriveAtWork.setText(stringFromFileArr[2]);
+                if (stringFromFileStream.contains("!"))
+                {
+                    // Split the string and populate the fields appropriately
+                    String[] stringFromFileArr = stringFromFileStream.split("!");
+                    homeAddress.setText(stringFromFileArr[0]);
+                    workAddress.setText(stringFromFileArr[1]);
+                    timeToArriveAtWork.setText(stringFromFileArr[2]);
+                } else
+                {
+                    // TODO: Print a Toast message with error occurred.
+                }
+
             }
 
         } catch (FileNotFoundException e) {
@@ -146,8 +153,8 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo
 
     public void writeToFile(Model m)
     {
-        // TODO: What if there are commas in the text fields already? This means that this save will not work.. correct this here
-        String fileContents = m.getHomeAddress() + "," + m.getWorkAddress() + "," + m.getTimeToArriveAtWork();
+        // Set the delimeter to a ! sign so that commas in address dont get misplaced when string splitting on file read
+        String fileContents = m.getHomeAddress() + "!" + m.getWorkAddress() + "!" + m.getTimeToArriveAtWork();
         FileOutputStream outputStream;
 
         try {
