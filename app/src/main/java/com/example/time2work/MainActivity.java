@@ -25,8 +25,8 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo
     // Declaring variables from the UI
     private EditText homeAddress;
     private EditText workAddress;
-    private EditText timeToArriveAtWork;
     private TextView timeToGetReady;
+    private TextView timeToArriveAtWorkTextView;
     private Button calculateButton;
 
     private Model newModel;
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo
         calculateButton = findViewById(R.id.buttonCalculate);
         homeAddress = findViewById(R.id.editTextHomeAddress);
         workAddress = findViewById(R.id.editTextWorkAddress);
-        timeToArriveAtWork = findViewById(R.id.editTextTimeToArriveWork);
+        timeToArriveAtWorkTextView= findViewById(R.id.textViewTimeToArriveWork);
         timeToGetReady = findViewById(R.id.textViewTimeToGetReady);
 
         // Check to see if saved file exists, if it does:
@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo
                     String[] stringFromFileArr = stringFromFileStream.split("!");
                     homeAddress.setText(stringFromFileArr[0]);
                     workAddress.setText(stringFromFileArr[1]);
-                    timeToArriveAtWork.setText(stringFromFileArr[2]);
+                    timeToArriveAtWorkTextView.setText(stringFromFileArr[2]);
                 } else
                 {
                     // TODO: Print a Toast message with error occurred.
@@ -89,18 +89,18 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo
                 // Lock all the fields to not be editable
                 disableEditText(homeAddress);
                 disableEditText(workAddress);
-                disableEditText(timeToArriveAtWork);
+                disableTextView(timeToArriveAtWorkTextView);
 
                 // Check that newModel is populated
                 // TODO: Also include a check that the time to arrive at work field is a number
-                if (workAddress.getText().toString().matches("") && homeAddress.getText().toString().matches("") && timeToArriveAtWork.getText().toString().matches(""))
+                if (workAddress.getText().toString().matches("") && homeAddress.getText().toString().matches("") && timeToArriveAtWorkTextView.getText().toString().matches(""))
                 {
                     // TODO: Add a toast/alert message to populate fields
                 } else
                 {
                     // Create a model object
-                    newModel = new Model(workAddress.getText().toString(), homeAddress.getText().toString(), timeToArriveAtWork.getText().toString());
-                    System.out.println("New Model object created with: Home Address = " + homeAddress.getText().toString() + ", Work Address = " + workAddress.getText().toString() + ", Time To Arrive At Work = " + timeToArriveAtWork.getText().toString());
+                    newModel = new Model(workAddress.getText().toString(), homeAddress.getText().toString(), timeToArriveAtWorkTextView.getText().toString());
+                    System.out.println("New Model object created with: Home Address = " + homeAddress.getText().toString() + ", Work Address = " + workAddress.getText().toString() + ", Time To Arrive At Work = " + timeToArriveAtWorkTextView.getText().toString());
                 }
 
                 // Call saveFile function
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo
                 // Unlock all the fields to be editable
                 enableEditText(homeAddress);
                 enableEditText(workAddress);
-                enableEditText(timeToArriveAtWork);
+                enableTextView(timeToArriveAtWorkTextView);
                 break;
 
             case R.id.buttonCalculate:
@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo
                 new GeoTask(MainActivity.this).execute(url);
                 break;
 
-            case R.id.editTextTimeToArriveWork:
+            case R.id.textViewTimeToArriveWork:
                 showTimePickerDialog();
 
 
@@ -180,6 +180,18 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo
         editText.setCursorVisible(true);
     }
 
+    private void disableTextView(TextView textView) {
+        textView.setFocusableInTouchMode(false);
+        textView.setEnabled(false);
+        textView.setCursorVisible(false);
+    }
+
+    private void enableTextView(TextView textView) {
+        //textView.setFocusableInTouchMode(true);
+        textView.setEnabled(true);
+        textView.setCursorVisible(true);
+    }
+
     public String getFileContent( FileInputStream fis)
     {
         String fileString;
@@ -208,7 +220,7 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo
         Double remainder2 = timeInMinutes - minutes;
         int seconds = (int) (remainder2 * 60.0);
 
-        String timeAtWork = timeToArriveAtWork.getText().toString();
+        String timeAtWork = timeToArriveAtWorkTextView.getText().toString();
         String[] timeAtWorkArr = timeAtWork.split(":");
 
         int secondToPrint = 60 - seconds;
@@ -255,7 +267,7 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo
                     time_string += "0";
                 }
                 time_string += minute;
-                timeToArriveAtWork.setText(time_string);
+                timeToArriveAtWorkTextView.setText(time_string);
             }
         }, 0, 0, true);
         timePickerDialog.show();
