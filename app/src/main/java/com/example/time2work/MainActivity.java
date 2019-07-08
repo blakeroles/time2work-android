@@ -245,9 +245,9 @@ public class MainActivity extends AppCompatActivity implements GeoTask.Geo
         }
 
 
+        timeToGetReady.setText("Leave at " + hoursToPrint + ":" + minuteToPrint);
 
-
-        timeToGetReady.setText(hours + ":" + minutes + ":" + seconds + "......." + hoursToPrint + ":" + minuteToPrint + ":" + secondToPrint);
+        //timeToGetReady.setText(hours + ":" + minutes + ":" + seconds + "......." + hoursToPrint + ":" + minuteToPrint + ":" + secondToPrint);
 
     }
 
